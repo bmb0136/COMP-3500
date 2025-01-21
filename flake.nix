@@ -20,7 +20,7 @@
         ncurses
       ];
     in {
-      devshells.default = pkgs.mkShellNoCC {
+      devShells.default = pkgs.mkShellNoCC {
         packages = tools;
       };
     });
