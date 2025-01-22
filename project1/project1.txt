@@ -1,4 +1,7 @@
 # Project 1 Report
 
+Things learned:
+- You can `git clone` a local repo
+
 Issues:
 - `ldd` does not have a manpage on nixos
