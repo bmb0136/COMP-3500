@@ -1,143 +1,0 @@
-Script started on 2025-01-22 00:01:54+00:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="236" LINES="55"]
-[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m na[K[Kman nix
-[?2004l[?1049h[22;0;0t[55;1H[?1h=[4mnix[24m(1)                                                                                                    General Commands Manual                                                                                                    [4mnix[24m(1)[m
-[m
-              [1mWarning[0m[m
-              This program is [1mexperimental [22m⟨@docroot@/development/experimental-features.md#xp-feature-nix-command⟩ and its interface is subject to change.[m
-[m
-[1mName[0m[m
-       nix - a tool for reproducible and declarative configuration management[m
-[m
-[1mSynopsis[0m[m
-       nix [[4moption[24m…] [4msubcommand[0m[m
-[m
-       where [4msubcommand[24m is one of the following:[m
-[m
-       [1mHelp commands:[0m[m
-[m
-       •  nix help ⟨./nix3-help.md⟩ - show help about nix or a particular subcommand[m
-       •  nix help-stores ⟨./nix3-help-stores.md⟩ - show help about store types and their settings[m
-[m
-       [1mMain commands:[0m[m
-[m
-       •  nix build ⟨./nix3-build.md⟩ - build a derivation or fetch a store path[m
-       •  nix develop ⟨./nix3-develop.md⟩ - run a bash shell that provides the build environment of a derivation[m
-       •  nix flake ⟨./nix3-flake.md⟩ - manage Nix flakes[m
-       •  nix profile ⟨./nix3-profile.md⟩ - manage Nix profiles[m
-       •  nix run ⟨./nix3-run.md⟩ - run a Nix application[m
-       •  nix search ⟨./nix3-search.md⟩ - search for packages[m
-[m
-       [1mMain commands:[0m[m
-[m
-       •  nix repl ⟨./nix3-repl.md⟩ - start an interactive environment for evaluating Nix expressions[m
-[m
-       [1mInfrequently used commands:[0m[m
-[m
-       •  nix bundle ⟨./nix3-bundle.md⟩ - bundle an application so that it works outside of the Nix store[m
-       •  nix copy ⟨./nix3-copy.md⟩ - copy paths between Nix stores[m
-       •  nix edit ⟨./nix3-edit.md⟩ - open the Nix expression of a Nix package in $EDITOR[m
-       •  nix eval ⟨./nix3-eval.md⟩ - evaluate a Nix expression[m
-       •  nix fmt ⟨./nix3-fmt.md⟩ - reformat your code in the standard style[m
-       •  nix log ⟨./nix3-log.md⟩ - show the build log of the specified packages or paths, if available[m
-       •  nix path-info ⟨./nix3-path-info.md⟩ - query information about store paths[m
-       •  nix registry ⟨./nix3-registry.md⟩ - manage the flake registry[m
-       •  nix why-depends ⟨./nix3-why-depends.md⟩ - show why a package has another package in its closure[m
-[m
-       [1mUtility/scripting commands:[0m[m
-[m
-       •  nix config ⟨./nix3-config.md⟩ - manipulate the Nix configuration[m
-       •  nix daemon ⟨./nix3-daemon.md⟩ - daemon to perform store operations on behalf of non-root clients[m
-       •  nix derivation ⟨./nix3-derivation.md⟩ - Work with derivations, Nix’s notion of a build plan.[m
-       •  nix env ⟨./nix3-env.md⟩ - manipulate the process environment[m
-       •  nix hash ⟨./nix3-hash.md⟩ - compute and convert cryptographic hashes[m
-       •  nix key ⟨./nix3-key.md⟩ - generate and convert Nix signing keys[m
-       •  nix nar ⟨./nix3-nar.md⟩ - create or inspect NAR files[m
-       •  nix print-dev-env ⟨./nix3-print-dev-env.md⟩ - print shell code that can be sourced by bash to reproduce the build environment of a derivation[m
-       •  nix realisation ⟨./nix3-realisation.md⟩ - manipulate a Nix realisation[m
-[7m Manual page nix(1) line 1 (press h for help or q to quit)[27m[K[K[?1l>[?1049l[23;0;0t[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m cd ../
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500brandon@wsl:~/src/COMP-3500]$[0m cd project1/
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m pwd
-[?2004l/home/brandon/src/COMP-3500/project1
-[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m ls
-[?2004lcommands.script
-[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m mkdir test
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m cp co[K[K../flake.nix test/
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m mv fl[K[Ktest/flake.nix .
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m s[Krmdir test[K[K[K[K[K[K[K[K[K[Krm flake.nix 
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m rmdir test
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m ls
-[?2004lcommands.script
-[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m l
-[?2004ltotal 12K
-drwxr-xr-x 2 brandon users 4.0K Jan 22 00:02 [0m[01;34m.[0m
-drwxr-xr-x 4 brandon users 4.0K Jan 22 00:01 [01;34m..[0m
--rw-r--r-- 1 brandon users 4.0K Jan 22 00:02 commands.script
-[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m chmod[K[K[K[K[Ktop
-[?2004l[?1h=[?25l[H[2J(B[mtop - 00:03:02 up 18 min,  2 users,  load average: 0.06, 0.13, 0.10(B[m[39;49m(B[m[39;49m[K
-Tasks:(B[m[39;49m[1m  23 (B[m[39;49mtotal,(B[m[39;49m[1m   1 (B[m[39;49mrunning,(B[m[39;49m[1m  22 (B[m[39;49msleeping,(B[m[39;49m[1m   0 (B[m[39;49mstopped,(B[m[39;49m[1m   0 (B[m[39;49mzombie(B[m[39;49m(B[m[39;49m[K
-%Cpu(s):(B[m[39;49m[1m  0.0 (B[m[39;49mus,(B[m[39;49m[1m  0.0 (B[m[39;49msy,(B[m[39;49m[1m  0.0 (B[m[39;49mni,(B[m[39;49m[1m100.0 (B[m[39;49mid,(B[m[39;49m[1m  0.0 (B[m[39;49mwa,(B[m[39;49m[1m  0.0 (B[m[39;49mhi,(B[m[39;49m[1m  0.0 (B[m[39;49msi,(B[m[39;49m[1m  0.0 (B[m[39;49mst(B[m[39;49m(B[m (B[m[39;49m(B[m[39;49m[K
-MiB Mem :(B[m[39;49m[1m  15930.9 (B[m[39;49mtotal,(B[m[39;49m[1m  13060.8 (B[m[39;49mfree,(B[m[39;49m[1m    694.5 (B[m[39;49mused,(B[m[39;49m[1m   2504.2 (B[m[39;49mbuff/cache(B[m[39;49m(B[m (B[m[39;49m(B[m    (B[m[39;49m(B[m[39;49m[K
-MiB Swap:(B[m[39;49m[1m   4096.0 (B[m[39;49mtotal,(B[m[39;49m[1m   4096.0 (B[m[39;49mfree,(B[m[39;49m[1m      0.0 (B[m[39;49mused.(B[m[39;49m[1m  15236.3 (B[m[39;49mavail Mem (B[m[39;49m(B[m[39;49m[K
-[K
-[7m    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                                                                                                              (B[m[39;49m[K
-(B[m      1 root      20   0   21620  13932  10744 S   0.0   0.1   0:01.93 systemd                                                                                                                                                              (B[m[39;49m[K
-(B[m      2 root      20   0    2616   1440   1320 S   0.0   0.0   0:00.01 init-systemd(Ni                                                                                                                                                      (B[m[39;49m[K
-(B[m      5 root      20   0    2616      4      0 S   0.0   0.0   0:00.00 init                                                                                                                                                                 (B[m[39;49m[K
-(B[m    110 root      20   0   48292  15380  14344 S   0.0   0.1   0:00.34 systemd-journal                                                                                                                                                      (B[m[39;49m[K
-(B[m    139 root      20   0   17516   9156   7592 S   0.0   0.1   0:00.14 systemd-udevd                                                                                                                                                        (B[m[39;49m[K
-(B[m    245 systemd+  20   0  311524   7560   6624 S   0.0   0.0   0:00.13 systemd-timesyn                                                                                                                                                      (B[m[39;49m[K
-(B[m    262 nscd      20   0  687656   4872   4136 S   0.0   0.0   0:00.28 nsncd                                                                                                                                                                (B[m[39;49m[K
-(B[m    265 message+  20   0    5932   4140   3444 S   0.0   0.0   0:00.22 dbus-daemon                                                                                                                                                          (B[m[39;49m[K
-(B[m    286 root      20   0   16244   8216   7180 S   0.0   0.1   0:00.13 systemd-logind                                                                                                                                                       (B[m[39;49m[K
-(B[m    306 root      20   0  451328  24292  20612 S   0.0   0.1   0:00.04 nix-daemon                                                                                                                                                           (B[m[39;49m[K
-(B[m    494 root      20   0   11408   5452   4552 S   0.0   0.0   0:00.01 login                                                                                                                                                                (B[m[39;49m[K
-(B[m    502 brandon   20   0   21200  12720  10336 S   0.0   0.1   0:00.73 systemd                                                                                                                                                              (B[m[39;49m[K
-(B[m    504 brandon   20   0   19156   1468      0 S   0.0   0.0   0:00.00 (sd-pam)                                                                                                                                                             (B[m[39;49m[K
-(B[m    512 brandon   20   0   10536   6680   5716 S   0.0   0.0   0:00.02 ssh-agent                                                                                                                                                            (B[m[39;49m[K
-(B[m    513 brandon   20   0    9256   5720   3620 S   0.0   0.0   0:00.02 bash                                                                                                                                                                 (B[m[39;49m[K
-(B[m    532 brandon   20   0    5548   2688   2460 S   0.0   0.0   0:00.01 dbus-daemon                                                                                                                                                          (B[m[39;49m[K
-(B[m   7799 brandon   20   0  229888   5592   4988 S   0.0   0.0   0:00.01 dconf-service                                                                                                                                                        (B[m[39;49m[K
-(B[m   8369 root      20   0    2616    124      0 S   0.0   0.0   0:00.00 SessionLeader                                                                                                                                                        (B[m[39;49m[K
-(B[m   8370 root      20   0    2616    124      0 S   0.0   0.0   0:00.14 Relay(8371)                                                                                                                                                          (B[m[39;49m[K
-(B[m   8371 brandon   20   0    9580   6200   3812 S   0.0   0.0   0:00.12 bash                                                                                                                                                                 (B[m[39;49m[K
-(B[m  11083 brandon   20   0    5652   2112   1980 S   0.0   0.0   0:00.02 script                                                                                                                                                               (B[m[39;49m[K
-(B[m  11084 brandon   20   0    9468   6276   3880 S   0.0   0.0   0:00.05 bash                                                                                                                                                                 (B[m[39;49m[K
-(B[m[1m  11117 brandon   20   0    9744   4864   2876 R   0.0   0.0   0:00.00 top                                                                                                                                                                  (B[m[39;49m[K
-[J[?1l>[56;1H
-[?12l[?25h[K[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m who
-[?2004lbrandon  pts/1        2025-01-21 23:44
-[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m nproc
-[?2004l4
-[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m touhc [K[K[Kch asd
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m chmod +044 asd
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m ls -la
-[?2004ltotal 20
-drwxr-xr-x 2 brandon users  4096 Jan 22 00:03 [0m[01;34m.[0m
-drwxr-xr-x 4 brandon users  4096 Jan 22 00:01 [01;34m..[0m
--rw-r--r-- 1 brandon users     0 Jan 22 00:03 asd
--rw-r--r-- 1 brandon users 12288 Jan 22 00:03 commands.script
-[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m rm asd
-[?2004l[?2004h
-[1;32m[]0;brandon@wsl: ~/src/COMP-3500/project1brandon@wsl:~/src/COMP-3500/project1]$[0m exit
-[?2004lexit
-
-Script done on 2025-01-22 00:03:34+00:00 [COMMAND_EXIT_CODE="0"]

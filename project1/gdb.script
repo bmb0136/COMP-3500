@@ -1,143 +1,0 @@
-Script started on 2025-01-22 00:14:02+00:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="236" LINES="55"]
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] cat simple.c
-#include <math.h>
-#include <stdio.h>
-
-int main() {
-  int nums[10] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0};
-  double total = 0.0;
-  for (size_t i = 0; i < 10; i++) {
-    total += sqrt(nums[i]);
-  }
-  printf("%f", total / 10.0);
-  return 0;
-}
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] gcc-  -v
-Using built-in specs.
-COLLECT_GCC=/nix/store/l89iqc7am6i60y8vk507zwrzxf0wcd3v-gcc-14-20241116/bin/gcc
-COLLECT_LTO_WRAPPER=/nix/store/l89iqc7am6i60y8vk507zwrzxf0wcd3v-gcc-14-20241116/libexec/gcc/x86_64-unknown-linux-gnu/14.2.1/lto-wrapper
-Target: x86_64-unknown-linux-gnu
-Configured with: ../gcc-14-20241116/configure --prefix=/nix/store/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-gcc-14-20241116 --with-gmp-include=/nix/store/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-gmp-6.3.0-dev/include --with-gmp-lib=/nix/store/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-gmp-6.3.0/lib --with-mpfr-include=/nix/store/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-mpfr-4.2.1-dev/include --with-mpfr-lib=/nix/store/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-mpfr-4.2.1/lib --with-mpc=/nix/store/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-libmpc-1.3.1 --with-native-system-header-dir=/nix/store/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-glibc-2.40-36-dev/include --with-build-sysroot=/ --with-gxx-include-dir=/nix/store/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-gcc-14-20241116/include/c++/14-20241116/ --program-prefix= --enable-lto --disable-libstdcxx-pch --without-included-gettext --with-system-zlib --enable-static --enable-languages=c,c++ --disable-multilib --enable-plugin --disable-libcc1 --with-isl=/nix/store/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-isl-0.20 --disable-bootstrap --build=x86_64-unknown-linux-gnu --host=x86_64-unknown-linux-gnu --target=x86_64-unknown-linux-gnu
-Thread model: posix
-Supported LTO compression algorithms: zlib
-gcc version 14.2.1 20241116 (GCC) 
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] gcc -g -lm -o simple simple.c
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] man ldd
-No manual entry for ldd
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] khjfsdkjsdjkhsdf
-khjfsdkjsdjkhsdf: command not found
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] idk
-idk: command not found
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] ldd     which ldd
-/nix/store/1c6bmxrrhm8bd26ai2rjqld2yyjrxhds-glibc-2.40-36-bin/bin/ldd
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] ldd simple
-	linux-vdso.so.1 (0x00007ffff7fc4000)
-	libm.so.6 => /nix/store/65h17wjrrlsj2rj540igylrx7fqcd6vq-glibc-2.40-36/lib/libm.so.6 (0x00007ffff7ed5000)
-	libc.so.6 => /nix/store/65h17wjrrlsj2rj540igylrx7fqcd6vq-glibc-2.40-36/lib/libc.so.6 (0x00007ffff7cd0000)
-	/nix/store/65h17wjrrlsj2rj540igylrx7fqcd6vq-glibc-2.40-36/lib/ld-linux-x86-64.so.2 => /nix/store/65h17wjrrlsj2rj540igylrx7fqcd6vq-glibc-2.40-36/lib64/ld-linux-x86-64.so.2 (0x00007ffff7fc6000)
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] #idk
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] cat ~/.gdbinit
-file simple
-break main
-break sqrt
-info registers
-
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] gdb sim    
-[35;1mGNU gdb (GDB) 15.2[m
-Copyright (C) 2024 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later <[32mhttp://gnu.org/licenses/gpl.html[m>
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-Type "show copying" and "show warranty" for details.
-This GDB was configured as "x86_64-unknown-linux-gnu".
-Type "show configuration" for configuration details.
-For bug reporting instructions, please see:
-[32m<https://www.gnu.org/software/gdb/bugs/>[m.
-Find the GDB manual and other documentation resources online at:
-    <[32mhttp://www.gnu.org/software/gdb/documentation/[m>.
-
-For help, type "help".
-Type "apropos word" to search for commands related to "word".
-Breakpoint 1 at [34m0x401060[m: file [32msimple.c[m, line 4.
-Breakpoint 2 at [34m0x401050[m
-/home/brandon/.gdbinit:4: Error in sourced command file:
-The program has no registers now.
-[?2004h(gdb) r
-[?2004lStarting program: [32m/home/brandon/src/COMP-3500/project1/simple[m 
-[Thread debugging using libthread_db enabled]
-Using host libthread_db library "[32m/nix/store/65h17wjrrlsj2rj540igylrx7fqcd6vq-glibc-2.40-36/lib/libthread_db.so.1[m".
-
-Breakpoint 1, [33mmain[m () at [32msimple.c[m:4
-4	[32mint[m [01mmain[m[31m()[m [31m{[m
-[?2004h[?2004l[?2004h(gdb) s
-[?2004l5	  [32mint[m nums[31m[[m[35m10[m[31m][m [31m=[m [31m{[m[35m1.0[m[31m,[m [35m2.0[m[31m,[m [35m3.0[m[31m,[m [35m4.0[m[31m,[m [35m5.0[m[31m,[m [35m6.0[m[31m,[m [35m7.0[m[31m,[m [35m8.0[m[31m,[m [35m9.0[m[31m,[m [35m10.0[m[31m}[m[31m;[m
-[?2004h[?2004l[?2004h(gdb) s
-[?2004l7	  [01;34mfor[m [31m([msize_t i [31m=[m [35m0[m[31m;[m i [31m<[m [35m10[m[31m;[m i[31m++)[m [31m{[m
-[?2004h[?2004l[?2004h(gdb) s
-[?2004l8	    total [31m+=[m [01msqrt[m[31m([mnums[31m[[mi[31m]);[m
-[?2004h[?2004l[?2004h(gdb) n
-[?2004l7	  [01;34mfor[m [31m([msize_t i [31m=[m [35m0[m[31m;[m i [31m<[m [35m10[m[31m;[m i[31m++)[m [31m{[m
-[?2004h[?2004l[?2004h(gdb) n
-[?2004l8	    total [31m+=[m [01msqrt[m[31m([mnums[31m[[mi[31m]);[m
-[?2004h[?2004l[?2004h(gdb) n
-[?2004l7	  [01;34mfor[m [31m([msize_t i [31m=[m [35m0[m[31m;[m i [31m<[m [35m10[m[31m;[m i[31m++)[m [31m{[m
-[?2004h[?2004l[?2004h(gdb) s
-[?2004l8	    total [31m+=[m [01msqrt[m[31m([mnums[31m[[mi[31m]);[m
-[?2004h[?2004l[?2004h(gdb) s
-[?2004l7	  [01;34mfor[m [31m([msize_t i [31m=[m [35m0[m[31m;[m i [31m<[m [35m10[m[31m;[m i[31m++)[m [31m{[m
-[?2004h[?2004l[?2004h(gdb) s
-[?2004l8	    total [31m+=[m [01msqrt[m[31m([mnums[31m[[mi[31m]);[m
-[?2004h[?2004l[?2004h(gdb) n
-[?2004l7	  [01;34mfor[m [31m([msize_t i [31m=[m [35m0[m[31m;[m i [31m<[m [35m10[m[31m;[m i[31m++)[m [31m{[m
-[?2004h[?2004l[?2004h(gdb) info registers
-[?2004lrax            0xa00000009         42949672969
-rbx            0x7fffffffad00      140737488334080
-rcx            0x403d98            4210072
-rdx            0x7fffffffae58      140737488334424
-rsi            0x7fffffffae48      140737488334408
-rdi            0x1                 1
-rbp            0x7fffffffad18      0x7fffffffad18
-rsp            0x7ffffffface0      0x7ffffffface0
-r8             0x0                 0
-r9             0x7ffff7fca120      140737353916704
-r10            0x0                 0
-r11            0x0                 0
-r12            0x0                 0
-r13            0x7fffffffae58      140737488334424
-r14            0x7ffff7ffd000      140737354125312
-r15            0x403d98            4210072
-rip            0x4010da            0x4010da <main+122>
-eflags         0x216               [ PF AF IF ]
-cs             0x33                51
-ss             0x2b                43
-ds             0x0                 0
-es             0x0                 0
-fs             0x0                 0
-gs             0x0                 0
-fs_base        0x7ffff7ccd740      140737350784832
-gs_base        0x0                 0
-[?2004h(gdb) c
-[?2004lContinuing.
-2.246828[Inferior 1 (process 13840) exited normally]
-[?2004h[?2004l[?2004h(gdb) exiyt
-[?2004lUndefined command: "exiyt".  Try "help".
-[?2004h(gdb) exit
-[?2004l
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] yipee
-yipee: command not found
-
-\[[1;32m\][\[]0;brandon@wsl: ~/src/COMP-3500/project1\]brandon@wsl:~/src/COMP-3500/project1]$\[[0m\] exit
-exit
-
-Script done on 2025-01-22 00:15:56+00:00 [COMMAND_EXIT_CODE="127"]
