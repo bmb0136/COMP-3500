@@ -1,3 +1,6 @@
 **/*~
 defs.mk
 kern/compile/ASST1/
+bin/**/*.o
+testbin/**/*.o
+lib/**/*.o

@@ -131,27 +131,48 @@ lock_destroy(struct lock *lock)
 void
 lock_acquire(struct lock *lock)
 {
-	// Write this
+  int spl = splhigh();
 
-	(void)lock;  // suppress warning until code gets written
+  if (lock_do_i_hold(lock)) {
+    panic("lock %s at %p: Deadlock.\n", lock->name, lock);
+  }
+
+  while (lock->holder != NULL) {
+    thread_sleep(lock);
+  }
+
+  lock->holder = curthread;
+  splx(spl);
 }
 
 void
 lock_release(struct lock *lock)
 {
-	// Write this
+  int spl = splhigh();
 
-	(void)lock;  // suppress warning until code gets written
+  if (!lock_do_i_hold(lock)) {
+    panic("lock %s at %p: Deadlock.\n", lock->name, lock);
+  }
+
+  lock->holder = NULL;
+
+  thread_wakeup(lock);
+
+  splx(spl);
 }
 
 int
 lock_do_i_hold(struct lock *lock)
 {
-	// Write this
+  assert(lock != NULL);
 
-	(void)lock;  // suppress warning until code gets written
+  int spl = splhigh();
 
-	return 1;    // dummy until code gets written
+  int same = lock->holder == curthread ? 1 : 0;
+
+  splx(spl);
+
+	return same;
 }
 
 ////////////////////////////////////////////////////////////
