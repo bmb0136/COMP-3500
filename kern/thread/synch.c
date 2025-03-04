@@ -215,23 +215,43 @@ cv_destroy(struct cv *cv)
 void
 cv_wait(struct cv *cv, struct lock *lock)
 {
-	// Write this
-	(void)cv;    // suppress warning until code gets written
-	(void)lock;  // suppress warning until code gets written
+  assert(cv != NULL);
+  assert(lock != NULL);
+
+  int spl = splhigh();
+
+  lock_release(lock);
+
+  thread_sleep(cv);
+
+  lock_acquire(lock);
+
+  splx(spl);
 }
 
 void
 cv_signal(struct cv *cv, struct lock *lock)
 {
-	// Write this
-	(void)cv;    // suppress warning until code gets written
-	(void)lock;  // suppress warning until code gets written
+  assert(cv != NULL);
+  assert(lock != NULL);
+
+  int spl = splhigh();
+
+  if (!lock_do_i_hold(lock)) {
+    panic("cv_signal error: cv %s at %p thread does not hold lock %s at %p", cv->name, cv, lock->name, lock);
+  }
+
+  thread_wakeup(cv);
+
+  splx(spl);
 }
 
 void
 cv_broadcast(struct cv *cv, struct lock *lock)
 {
-	// Write this
-	(void)cv;    // suppress warning until code gets written
-	(void)lock;  // suppress warning until code gets written
+  int spl = splhigh();
+
+  thread_wakeup(cv);
+
+  splx(spl);
 }
