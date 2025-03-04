@@ -1,0 +1,4 @@
+hostcompat
+*.o
+*.ho
+*.ha
