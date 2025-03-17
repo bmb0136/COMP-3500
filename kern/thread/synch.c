@@ -112,7 +112,7 @@ lock_create(const char *name)
 		return NULL;
 	}
 	
-	// add stuff here as needed
+  lock->holder = NULL;
 	
 	return lock;
 }
@@ -241,7 +241,7 @@ cv_signal(struct cv *cv, struct lock *lock)
     panic("cv_signal error: cv %s at %p thread does not hold lock %s at %p", cv->name, cv, lock->name, lock);
   }
 
-  thread_wakeup(cv);
+  thread_wakeone(cv);
 
   splx(spl);
 }
