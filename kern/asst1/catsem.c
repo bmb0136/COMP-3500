@@ -18,6 +18,7 @@
 #include <lib.h>
 #include <test.h>
 #include <thread.h>
+#include <synch.h>
 
 
 /*
@@ -44,6 +45,36 @@
 
 #define NMICE 2
 
+/*
+ * Max amount of time each animal is playing or eating
+ */
+
+#define MAXTIME 2
+
+/*
+ * Amount of seconds the simulation runs for
+ */
+#define RUNTIME 15
+
+/*
+ *
+ * Shared Variables
+ *
+ */
+
+// Animal-specific Data
+static volatile struct semaphore *catsQueue = NULL, *miceQueue = NULL;
+static volatile unsigned long catsWaiting = 0, miceWaiting = 0;
+
+// Animal-agnostic Data
+static volatile struct semaphore *mutex = NULL;
+static volatile unsigned long dishesUsed = 0;
+static volatile /*bool*/ char kitchenFree = 1;
+
+// Test Driver Data
+static volatile struct semaphore *doneSem = NULL;
+static volatile /*bool*/ char run = 0;
+
 
 /*
  * 
@@ -51,8 +82,98 @@
  * 
  */
 
-
 /*
+ *
+ * animalsem(): Animal-agnostic Cat & Mouse implementation
+ *
+ * Arguments:
+ *    (bool) char isCat: Is the animal calling this function a cat or a mouse? True (non-zero) if cat, false (zero) if mouse
+ *    unsigned long animalNumber: the specific animal that is calling this function
+ *    unsigned long animalCount: the total number of animals of the caller's type
+ *    struct semaphore *queue: the queue for animals of the caller's type
+ *    struct semaphore *otherQueue: the queue for animals NOT of the caller's type
+ *    unsigned long *waiting: the number of animals of the caller's type
+ *    unsigned long *otherWaiting: the number of animals NOT of the caller's type
+ *
+ */
+static
+void
+animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
+          struct semaphore *queue, struct semaphore *otherQueue,
+          unsigned long *waiting, unsigned long *otherWaiting)
+{
+
+  while (!run) {
+    thread_yield();
+  }
+
+  const char *animalType = isCat ? "Cat" : "Mouse";
+  kprintf("!!! %s %ld Started\n", animalType, animalNumber);
+
+  while (run) {
+
+    /*
+     * Let somebody in if the kitchen is free.
+     * Handles the case when no animals are in the kitchen (which is the case initially).
+     */
+    P(mutex);
+    if (kitchenFree) {
+      kitchenFree = 0;
+      kprintf("+++ %s %ld Letting another %s in (kitchen free)\n", animalType, animalNumber, animalType);
+      V(queue);
+    }
+    (*waiting)++;
+    kprintf("*** %s %ld Hungry\n", animalType, animalNumber);
+    V(mutex);
+
+    P(queue);
+
+    /*
+     * Enter the kitchen.
+     */
+    P(mutex);
+    kprintf(">>> %s %ld Entered the kitchen\n", animalType, animalNumber);
+    dishesUsed++;
+    (*waiting)--;
+    if ((*waiting) && dishesUsed < (animalCount < NFOODBOWLS ? animalCount : NFOODBOWLS)) {
+      kprintf("+++ %s %ld Letting another %s in (dishes available)\n", animalType, animalNumber, animalType);
+      V(queue);
+    }
+    V(mutex);
+
+    kprintf("... %s %ld Eating\n", animalType, animalNumber);
+
+    clocksleep(random() % MAXTIME);
+
+    /*
+     * Leave the kitchen.
+     */
+    P(mutex);
+    kprintf("<<< %s %ld Left the kitchen\n", animalType, animalNumber);
+    dishesUsed--;
+    if (dishesUsed == 0) {
+      if (*otherWaiting > 0) {
+        kprintf("+++ %s %ld Letting a %s in\n", animalType, animalNumber, isCat ? "Mouse" : "Cat");
+        V(otherQueue);
+      } else if (*waiting > 0) {
+        kprintf("+++ %s %ld Letting another %s in (after leaving)\n", animalType, animalNumber, animalType);
+        V(queue);
+      } else {
+        kprintf("--- %s %ld Freeing kitchen\n", animalType, animalNumber);
+        kitchenFree = 1;
+      }
+    }
+    kprintf("... %s %ld Playing\n", animalType, animalNumber);
+    V(mutex);
+
+    clocksleep(random() % MAXTIME);
+  }
+  kprintf("!!! %s %ld Exited\n", animalType, animalNumber);
+  V(doneSem);
+}
+
+
+/*stuff
  * catsem()
  *
  * Arguments:
@@ -72,12 +193,10 @@ void
 catsem(void * unusedpointer, 
        unsigned long catnumber)
 {
-        /*
-         * Avoid unused variable warnings.
-         */
-
         (void) unusedpointer;
-        (void) catnumber;
+        animalsem(1, catnumber, NCATS,
+                  catsQueue, miceQueue,
+                  &catsWaiting, &miceWaiting);
 }
         
 
@@ -102,12 +221,10 @@ void
 mousesem(void * unusedpointer, 
          unsigned long mousenumber)
 {
-        /*
-         * Avoid unused variable warnings.
-         */
-
         (void) unusedpointer;
-        (void) mousenumber;
+        animalsem(0, mousenumber, NMICE,
+                  miceQueue, catsQueue,
+                  &miceWaiting, &catsWaiting);
 }
 
 
@@ -122,7 +239,7 @@ mousesem(void * unusedpointer,
  *      0 on success.
  *
  * Notes:
- *      Driver code to start up catsem() and mousesem() threads.  Change this 
+ *   !!! Driver code to start up catsem() and mousesem() threads.  Change this 
  *      code as necessary for your solution.
  */
 
@@ -138,6 +255,26 @@ catmousesem(int nargs,
 
         (void) nargs;
         (void) args;
+
+        /*
+         * Init shared variables
+         */
+        catsQueue = sem_create("Cats Queue", 0);
+        if (!catsQueue) {
+          panic("catmousesem: Failed to create cats queue\n");
+        }
+        miceQueue = sem_create("Mice Queue", 0);
+        if (!miceQueue) {
+          panic("catmousesem: Failed to create mice queue\n");
+        }
+        mutex = sem_create("Cats and Mice Mutex", 1);
+        if (!mutex) {
+          panic("catmousesem: Failed to create mutex\n");
+        }
+        doneSem = sem_create("Thread Exit Waiter", 0);
+        if (!doneSem) {
+          panic("catmousesem: Failed to done semaphore\n");
+        }
    
         /*
          * Start NCATS catsem() threads.
@@ -188,6 +325,26 @@ catmousesem(int nargs,
                               );
                 }
         }
+
+  
+        /*
+         * Run simulation
+         */
+        kprintf("!!! Driver: Starting simulation\n");
+        run = 1;
+        clocksleep(RUNTIME);
+        kprintf("!!! Driver: Ending simulation\n");
+        run = 0;
+
+        /*
+         * Wait for all animals to finish
+         */
+        kprintf("!!! Driver: Waiting for threads to exit\n");
+        run = 0;
+        for (index = 0; index < (NCATS + NMICE); index++) {
+                P(doneSem);
+        }
+        kprintf("!!! Driver: done\n");
 
         return 0;
 }
