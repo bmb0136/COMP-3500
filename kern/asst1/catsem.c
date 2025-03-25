@@ -239,7 +239,7 @@ mousesem(void * unusedpointer,
  *      0 on success.
  *
  * Notes:
- *   !!! Driver code to start up catsem() and mousesem() threads.  Change this 
+ *      Driver code to start up catsem() and mousesem() threads.  Change this 
  *      code as necessary for your solution.
  */
 
