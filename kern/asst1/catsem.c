@@ -97,7 +97,9 @@ static void takeKitchen(const char *animalName, /*bool*/ char isCat,
 static void enterKitchen(const char *animalName, /*bool*/ char isCat, int animalCount,
                          struct semaphore *queue,
                          unsigned long *waiting);
-static void leaveKitchen(const char *animalName, /*bool*/ char isCat, struct semaphore *queue, struct semaphore *otherQueue, unsigned long *waiting, unsigned long *otherWaiting);
+static void leaveKitchen(const char *animalName, /*bool*/ char isCat,
+                         struct semaphore *queue, struct semaphore *otherQueue,
+                         unsigned long *waiting, unsigned long *otherWaiting);
 
 /*
  *
@@ -134,6 +136,7 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
     P(queue);
 
     enterKitchen(animalName, isCat, animalCount, queue, waiting);
+    kprintf("*** %s Hungry\n", animalName);
 
     kprintf("... %s Eating\n", animalName);
     clocksleep(random() % MAXTIME);
@@ -169,7 +172,6 @@ takeKitchen(const char *animalName, /*bool*/ char isCat,
     V(queue);
   }
   (*waiting)++;
-  kprintf("*** %s Hungry\n", animalName);
   V(mutex);
 }
 
@@ -183,13 +185,15 @@ takeKitchen(const char *animalName, /*bool*/ char isCat,
  *    struct semaphore *queue: The queue to signal animals of the caller's type
  *    unsigned long *waiting: The number of animals of the caller's type that are waiting to enter the kitchen
  */
-static void enterKitchen(const char *animalName, /*bool*/ char isCat,
-                         int animalCount, struct semaphore *queue,
-                         unsigned long *waiting) {
+static
+void
+enterKitchen(const char *animalName, /*bool*/ char isCat, int animalCount,
+             struct semaphore *queue,
+             unsigned long *waiting)
+{
   P(mutex);
 
-  kprintf(">>> %s Entered the kitchen (%d/%d dishes used)\n", animalName,
-          dishesUsed + 1, NFOODBOWLS);
+  kprintf(">>> %s Entered the kitchen (%d/%d dishes used)\n", animalName, dishesUsed + 1, NFOODBOWLS);
   dishesUsed++;
   (*waiting)--;
 
@@ -197,8 +201,7 @@ static void enterKitchen(const char *animalName, /*bool*/ char isCat,
   // animals of a specific type.
   int maxAnimalsToLetIn = animalCount < NFOODBOWLS ? animalCount : NFOODBOWLS;
   if ((*waiting) && dishesUsed < maxAnimalsToLetIn) {
-    kprintf("+++ %s Letting another %s in (dishes available)\n", animalName,
-            isCat ? "Cat" : "Mouse");
+    kprintf("+++ %s Letting another %s in (dishes available)\n", animalName, isCat ? "Cat" : "Mouse");
     V(queue);
   }
 
