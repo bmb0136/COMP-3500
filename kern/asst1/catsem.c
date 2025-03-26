@@ -91,7 +91,7 @@ static volatile /*bool*/ char run = 0;
 /*
  * Prototypes for animalsem()
  */
-static void takeKitchen(const char *animalName, /*bool*/ char isCat,
+static void tryTakeKitchen(const char *animalName, /*bool*/ char isCat,
                         struct semaphore *queue,
                         unsigned long *waiting);
 static void enterKitchen(const char *animalName, /*bool*/ char isCat, int animalCount,
@@ -151,7 +151,7 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
 }
 
 /*
- * takeKitchen(): Let somebody in if the kitchen is free. Handles the case when no animals are in the kitchen (which is the case initially).
+ * tryTakeKitchen(): Let somebody in if the kitchen is free. Handles the case when no animals are in the kitchen (which is the case initially).
  *
  * Arguments:
  *    const char *animalName: The name of the animal that called this function
@@ -161,7 +161,7 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
  */
 static
 void
-takeKitchen(const char *animalName, /*bool*/ char isCat,
+tryTakeKitchen(const char *animalName, /*bool*/ char isCat,
             struct semaphore *queue,
             unsigned long *waiting)
 {
