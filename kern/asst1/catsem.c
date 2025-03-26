@@ -94,7 +94,7 @@ static volatile /*bool*/ char run = 0;
 static void takeKitchen(const char *animalName, /*bool*/ char isCat,
                         struct semaphore *queue,
                         unsigned long *waiting);
-static void enterKitchen(const char *animalName, /*bool*/ char isChat, int animalCount,
+static void enterKitchen(const char *animalName, /*bool*/ char isCat, int animalCount,
                          struct semaphore *queue,
                          unsigned long *waiting);
 static void leaveKitchen(const char *animalName, /*bool*/ char isCat, struct semaphore *queue, struct semaphore *otherQueue, unsigned long *waiting, unsigned long *otherWaiting);
@@ -177,7 +177,7 @@ takeKitchen(const char *animalName, /*bool*/ char isCat,
  */
 static
 void
-enterKitchen(const char *animalName, /*bool*/ char isChat, int animalCount,
+enterKitchen(const char *animalName, /*bool*/ char isCat, int animalCount,
                          struct semaphore *queue,
                          unsigned long *waiting)
 {
