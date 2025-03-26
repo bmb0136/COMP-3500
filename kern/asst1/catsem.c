@@ -386,21 +386,21 @@ catmousesem(int nargs,
         /*
          * Run simulation
          */
-        kprintf("!!! Driver: Starting simulation\n");
+        kprintf("### Driver: Starting simulation\n");
         run = 1;
         clocksleep(RUNTIME);
-        kprintf("!!! Driver: Ending simulation\n");
+        kprintf("### Driver: Ending simulation\n");
         run = 0;
 
         /*
          * Wait for all animals to finish
          */
-        kprintf("!!! Driver: Waiting for threads to exit\n");
+        kprintf("### Driver: Waiting for threads to exit\n");
         run = 0;
         for (index = 0; index < (NCATS + NMICE); index++) {
                 P(doneSem);
         }
-        kprintf("!!! Driver: done\n");
+        kprintf("### Driver: done\n");
 
         return 0;
 }
