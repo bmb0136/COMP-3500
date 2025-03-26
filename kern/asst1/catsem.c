@@ -59,7 +59,7 @@
 /*
  * Names of each animal
  */
-static volatile const char *catNames[NCATS] = { "C1", "C2", "C3", "C4", "C5", "C6" };
+static volatile const char *catNames[NCATS] = { "Charlie", "Cooper", "Chad", "Carson", "Caleb", "Claire" };
 static volatile const char *mouseNames[NMICE] = { "Mickey", "Minnie" };
 
 /*
