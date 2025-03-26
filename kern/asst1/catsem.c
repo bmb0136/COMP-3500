@@ -57,6 +57,12 @@
 #define RUNTIME 15
 
 /*
+ * Names of each animal
+ */
+static volatile const char *catNames[NCATS] = { "C1", "C2", "C3", "C4", "C5", "C6" };
+static volatile const char *mouseNames[NMICE] = { "Mickey", "Minnie" };
+
+/*
  *
  * Shared Variables
  *
@@ -107,8 +113,8 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
     thread_yield();
   }
 
-  const char *animalType = isCat ? "Cat" : "Mouse";
-  kprintf("!!! %s %ld Started\n", animalType, animalNumber);
+  const char *animalName = isCat ? catNames[animalNumber] : mouseNames[animalNumber];
+  kprintf("!!! %s Started\n", animalName);
 
   while (run) {
 
@@ -119,11 +125,11 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
     P(mutex);
     if (kitchenFree) {
       kitchenFree = 0;
-      kprintf("+++ %s %ld Letting another %s in (kitchen free)\n", animalType, animalNumber, animalType);
+      kprintf("+++ %s Letting another %s in (kitchen free)\n", animalName, isCat ? "Cat" : "Mouse");
       V(queue);
     }
     (*waiting)++;
-    kprintf("*** %s %ld Hungry\n", animalType, animalNumber);
+    kprintf("*** %s %ld Hungry\n", animalName);
     V(mutex);
 
     P(queue);
@@ -132,16 +138,15 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
      * Enter the kitchen.
      */
     P(mutex);
-    kprintf(">>> %s %ld Entered the kitchen\n", animalType, animalNumber);
+    kprintf(">>> %s Entered the kitchen\n", animalName);
     dishesUsed++;
     (*waiting)--;
     if ((*waiting) && dishesUsed < (animalCount < NFOODBOWLS ? animalCount : NFOODBOWLS)) {
-      kprintf("+++ %s %ld Letting another %s in (dishes available)\n", animalType, animalNumber, animalType);
+      kprintf("+++ %s Letting another %s in (dishes available)\n", animalName, isCat ? "Cat" : "Mouse");
       V(queue);
     }
+    kprintf("... %s Eating\n", animalName);
     V(mutex);
-
-    kprintf("... %s %ld Eating\n", animalType, animalNumber);
 
     clocksleep(random() % MAXTIME);
 
@@ -149,26 +154,26 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
      * Leave the kitchen.
      */
     P(mutex);
-    kprintf("<<< %s %ld Left the kitchen\n", animalType, animalNumber);
+    kprintf("<<< %s Left the kitchen\n", animalName);
     dishesUsed--;
     if (dishesUsed == 0) {
       if (*otherWaiting > 0) {
-        kprintf("+++ %s %ld Letting a %s in\n", animalType, animalNumber, isCat ? "Mouse" : "Cat");
+        kprintf("+++ %s Letting a %s in\n", animalName, isCat ? "Mouse" : "Cat");
         V(otherQueue);
       } else if (*waiting > 0) {
-        kprintf("+++ %s %ld Letting another %s in (after leaving)\n", animalType, animalNumber, animalType);
+        kprintf("+++ %s Letting another %s in (after leaving)\n", animalName, isCat ? "Cat" : "Mouse");
         V(queue);
       } else {
-        kprintf("--- %s %ld Freeing kitchen\n", animalType, animalNumber);
+        kprintf("--- %s Freeing kitchen\n", animalName);
         kitchenFree = 1;
       }
     }
-    kprintf("... %s %ld Playing\n", animalType, animalNumber);
+    kprintf("... %s Playing\n", animalName);
     V(mutex);
 
     clocksleep(random() % MAXTIME);
   }
-  kprintf("!!! %s %ld Exited\n", animalType, animalNumber);
+  kprintf("!!! %s Exited\n", animalName);
   V(doneSem);
 }
 
