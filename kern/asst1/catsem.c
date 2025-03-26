@@ -89,6 +89,17 @@ static volatile /*bool*/ char run = 0;
  */
 
 /*
+ * Prototypes for animalsem()
+ */
+static void takeKitchen(const char *animalName, /*bool*/ char isCat,
+                        struct semaphore *queue,
+                        unsigned long *waiting);
+static void enterKitchen(const char *animalName, /*bool*/ char isChat, int animalCount,
+                         struct semaphore *queue,
+                         unsigned long *waiting);
+static void leaveKitchen(const char *animalName, /*bool*/ char isCat, struct semaphore *queue, struct semaphore *otherQueue, unsigned long *waiting, unsigned long *otherWaiting);
+
+/*
  *
  * animalsem(): Animal-agnostic Cat & Mouse implementation
  *
@@ -117,26 +128,59 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
   kprintf("!!! %s Started\n", animalName);
 
   while (run) {
-
-    /*
-     * Let somebody in if the kitchen is free.
-     * Handles the case when no animals are in the kitchen (which is the case initially).
-     */
-    P(mutex);
-    if (kitchenFree) {
-      kitchenFree = 0;
-      kprintf("+++ %s Letting another %s in (kitchen free)\n", animalName, isCat ? "Cat" : "Mouse");
-      V(queue);
-    }
-    (*waiting)++;
-    kprintf("*** %s %ld Hungry\n", animalName);
-    V(mutex);
-
+    takeKitchen(animalName, isCat, queue, waiting);
     P(queue);
+    enterKitchen(animalName, isCat, animalCount, queue, waiting);
+    clocksleep(random() % MAXTIME);
+    leaveKitchen(animalName, isCat, queue, otherQueue, waiting, otherWaiting);
+    clocksleep(random() % MAXTIME);
+  }
+  kprintf("!!! %s Exited\n", animalName);
+  V(doneSem);
+}
 
-    /*
-     * Enter the kitchen.
-     */
+/*
+ * takeKitchen(): Let somebody in if the kitchen is free. Handles the case when no animals are in the kitchen (which is the case initially).
+ *
+ * Arguments:
+ *    const char *animalName: The name of the animal that called this function
+ *    (bool) char isCat: Whether the caller is a cat or not
+ *    struct semaphore *queue: The queue to signal animals of the caller's type
+ *    unsigned long *waiting: The number of animals of the caller's type that are waiting to enter the kitchen
+ */
+static
+void
+takeKitchen(const char *animalName, /*bool*/ char isCat,
+            struct semaphore *queue,
+            unsigned long *waiting)
+{
+  P(mutex);
+  if (kitchenFree) {
+    kitchenFree = 0;
+    kprintf("+++ %s Letting another %s in (kitchen free)\n", animalName, isCat ? "Cat" : "Mouse");
+    V(queue);
+  }
+  (*waiting)++;
+  kprintf("*** %s %ld Hungry\n", animalName);
+  V(mutex);
+}
+
+/*
+ * enterKitchen(): Enter the kitchen. Lets another animal in if possible.
+ *
+ * Arguments:
+ *    const char *animalName: The name of the animal that called this function
+ *    (bool) char isCat: Whether the caller is a cat or not
+ *    int animalCount: The total number of animals of the caller's type
+ *    struct semaphore *queue: The queue to signal animals of the caller's type
+ *    unsigned long *waiting: The number of animals of the caller's type that are waiting to enter the kitchen
+ */
+static
+void
+enterKitchen(const char *animalName, /*bool*/ char isChat, int animalCount,
+                         struct semaphore *queue,
+                         unsigned long *waiting)
+{
     P(mutex);
     kprintf(">>> %s Entered the kitchen\n", animalName);
     dishesUsed++;
@@ -147,36 +191,43 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
     }
     kprintf("... %s Eating\n", animalName);
     V(mutex);
-
-    clocksleep(random() % MAXTIME);
-
-    /*
-     * Leave the kitchen.
-     */
-    P(mutex);
-    kprintf("<<< %s Left the kitchen\n", animalName);
-    dishesUsed--;
-    if (dishesUsed == 0) {
-      if (*otherWaiting > 0) {
-        kprintf("+++ %s Letting a %s in\n", animalName, isCat ? "Mouse" : "Cat");
-        V(otherQueue);
-      } else if (*waiting > 0) {
-        kprintf("+++ %s Letting another %s in (after leaving)\n", animalName, isCat ? "Cat" : "Mouse");
-        V(queue);
-      } else {
-        kprintf("--- %s Freeing kitchen\n", animalName);
-        kitchenFree = 1;
-      }
-    }
-    kprintf("... %s Playing\n", animalName);
-    V(mutex);
-
-    clocksleep(random() % MAXTIME);
-  }
-  kprintf("!!! %s Exited\n", animalName);
-  V(doneSem);
 }
 
+/*
+ * leaveKitchen(): Leaves the kitchen. Will let the opposite animal type in if possible, then try its own type, and finally will free the kitchen otherwise.
+ *
+ * Arguments:
+ *    const char *animalName: The name of the animal that called this function
+ *    (bool) char isCat: Whether the caller is a cat or not
+ *    struct semaphore *queue: The queue to signal animals of the caller's type
+ *    struct semaphore *otherQueue: The queue to signal animals NOT of the caller's type
+ *    unsigned long *waiting: The number of animals of the caller's type that are waiting to enter the kitchen
+ *    unsigned long *otherWaiting: The number of animals NOT of the caller's type that are waiting to enter the kitchen
+ */
+static
+void
+leaveKitchen(const char *animalName, /*bool*/ char isCat,
+             struct semaphore *queue, struct semaphore *otherQueue,
+             unsigned long *waiting, unsigned long *otherWaiting)
+{
+  P(mutex);
+  kprintf("<<< %s Left the kitchen\n", animalName);
+  dishesUsed--;
+  if (dishesUsed == 0) {
+    if (*otherWaiting > 0) {
+      kprintf("+++ %s Letting a %s in\n", animalName, isCat ? "Mouse" : "Cat");
+      V(otherQueue);
+    } else if (*waiting > 0) {
+      kprintf("+++ %s Letting another %s in (after leaving)\n", animalName, isCat ? "Cat" : "Mouse");
+      V(queue);
+    } else {
+      kprintf("--- %s Freeing kitchen\n", animalName);
+      kitchenFree = 1;
+    }
+  }
+  kprintf("... %s Playing\n", animalName);
+  V(mutex);
+}
 
 /*stuff
  * catsem()
