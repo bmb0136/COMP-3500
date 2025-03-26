@@ -128,11 +128,19 @@ animalsem(/*bool*/ char isCat, unsigned long animalNumber, int animalCount,
   kprintf("!!! %s Started\n", animalName);
 
   while (run) {
-    takeKitchen(animalName, isCat, queue, waiting);
+    tryTakeKitchen(animalName, isCat, queue, waiting);
+
+    // Wait to be let in
     P(queue);
+
     enterKitchen(animalName, isCat, animalCount, queue, waiting);
+
+    kprintf("... %s Eating\n", animalName);
     clocksleep(random() % MAXTIME);
+
     leaveKitchen(animalName, isCat, queue, otherQueue, waiting, otherWaiting);
+
+    kprintf("... %s Playing\n", animalName);
     clocksleep(random() % MAXTIME);
   }
   kprintf("!!! %s Exited\n", animalName);
@@ -175,22 +183,26 @@ takeKitchen(const char *animalName, /*bool*/ char isCat,
  *    struct semaphore *queue: The queue to signal animals of the caller's type
  *    unsigned long *waiting: The number of animals of the caller's type that are waiting to enter the kitchen
  */
-static
-void
-enterKitchen(const char *animalName, /*bool*/ char isCat, int animalCount,
-                         struct semaphore *queue,
-                         unsigned long *waiting)
-{
-    P(mutex);
-    kprintf(">>> %s Entered the kitchen\n", animalName);
-    dishesUsed++;
-    (*waiting)--;
-    if ((*waiting) && dishesUsed < (animalCount < NFOODBOWLS ? animalCount : NFOODBOWLS)) {
-      kprintf("+++ %s Letting another %s in (dishes available)\n", animalName, isCat ? "Cat" : "Mouse");
-      V(queue);
-    }
-    kprintf("... %s Eating\n", animalName);
-    V(mutex);
+static void enterKitchen(const char *animalName, /*bool*/ char isCat,
+                         int animalCount, struct semaphore *queue,
+                         unsigned long *waiting) {
+  P(mutex);
+
+  kprintf(">>> %s Entered the kitchen (%d/%d dishes used)\n", animalName,
+          dishesUsed + 1, NFOODBOWLS);
+  dishesUsed++;
+  (*waiting)--;
+
+  // This ternary is here to handle the possibility of having more bowls than
+  // animals of a specific type.
+  int maxAnimalsToLetIn = animalCount < NFOODBOWLS ? animalCount : NFOODBOWLS;
+  if ((*waiting) && dishesUsed < maxAnimalsToLetIn) {
+    kprintf("+++ %s Letting another %s in (dishes available)\n", animalName,
+            isCat ? "Cat" : "Mouse");
+    V(queue);
+  }
+
+  V(mutex);
 }
 
 /*
@@ -211,7 +223,9 @@ leaveKitchen(const char *animalName, /*bool*/ char isCat,
              unsigned long *waiting, unsigned long *otherWaiting)
 {
   P(mutex);
-  kprintf("<<< %s Left the kitchen\n", animalName);
+
+  kprintf("<<< %s Left the kitchen (%d/%d dishes used)\n", animalName,
+          dishesUsed - 1, NFOODBOWLS);
   dishesUsed--;
   if (dishesUsed == 0) {
     if (*otherWaiting > 0) {
@@ -225,11 +239,11 @@ leaveKitchen(const char *animalName, /*bool*/ char isCat,
       kitchenFree = 1;
     }
   }
-  kprintf("... %s Playing\n", animalName);
+
   V(mutex);
 }
 
-/*stuff
+/*
  * catsem()
  *
  * Arguments:
