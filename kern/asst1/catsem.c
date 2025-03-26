@@ -161,7 +161,7 @@ takeKitchen(const char *animalName, /*bool*/ char isCat,
     V(queue);
   }
   (*waiting)++;
-  kprintf("*** %s %ld Hungry\n", animalName);
+  kprintf("*** %s Hungry\n", animalName);
   V(mutex);
 }
 
