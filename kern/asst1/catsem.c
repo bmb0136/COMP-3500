@@ -417,6 +417,15 @@ catmousesem(int nargs,
         for (index = 0; index < (NCATS + NMICE); index++) {
                 P(doneSem);
         }
+
+
+        /*
+         * Cleanup
+         */
+        sem_destroy(catsQueue);
+        sem_destroy(miceQueue);
+        sem_destroy(mutex);
+        sem_destroy(doneSem);
         kprintf("### Driver: done\n");
 
         return 0;
